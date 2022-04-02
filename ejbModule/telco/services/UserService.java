@@ -30,7 +30,42 @@ public class UserService {
 		else if (uList.size() == 1)
 			return uList.get(0);
 		throw new NonUniqueResultException("More than one user registered with same credentials");
-
 	}
 
+	public String registration(String usrn, String email, String pwd) throws CredentialsException {
+		List<User> uList = null;
+		try {
+			uList = em.createNamedQuery("User.checkRegistrationUsername", User.class).setParameter(1, usrn)
+					.getResultList();
+
+			// ------------ check
+			System.out.println("username " + uList);
+
+			if (!uList.isEmpty())
+				return "Username already used";
+
+			uList = em.createNamedQuery("User.checkRegistrationEmail", User.class).setParameter(1, email)
+					.getResultList();
+
+			// ------------ check
+			System.out.println("email " + uList);
+
+			if (!uList.isEmpty())
+				return "Email already used";
+
+			User user = new User();
+			user.setUsername(usrn);
+			user.setEmail(email);
+			user.setPassword(pwd);
+			user.setEmployee(false);
+			em.persist(user);
+			em.flush();
+
+			return "OK";
+
+		} catch (PersistenceException e) {
+			throw new CredentialsException("Could not verify credentals");
+		}
+
+	}
 }
