@@ -37,6 +37,7 @@ public class OrderService {
 		em.persist(o);
 		em.flush();
 
+		//This query is done to retrieve the id of the order that we have just create
 		Order o1 = em.createNamedQuery("Order.findId", Order.class).setParameter(1, dateTime)
 				.setParameter(2, totalValue).setParameter(3, startDate).setParameter(4, valid).getSingleResult();
 
@@ -55,7 +56,7 @@ public class OrderService {
 		return em.createNamedQuery("Order.findAllRejected", Order.class).getResultList();
 	}
 
-	// TODO: i don't like it at all...
+	// TODO: improve it (for example use "findRejectedOrders()")
 	public List<Order> findRejectedOrdersByUserId(int userId) {
 		List<OrderUserPackage> oupList = em.createNamedQuery("OrderUserPackage.findByUserId", OrderUserPackage.class)
 				.setParameter(1, userId).getResultList();

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -42,6 +43,12 @@ public class Order implements Serializable {
 	@MapKeyJoinColumn(name = "iduser")
 	private Map<User, Package> userPackage = new HashMap<>();
 	*/
+	
+	//TODO: to check if needed bi-directional one-to-one association to Alert and SAS
+	@OneToOne
+	private SAS sas;
+	@OneToOne
+	private Alert alert;
 
 	public Order() {
 	}

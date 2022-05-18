@@ -1,7 +1,18 @@
 package telco.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Package", schema = "telco")
@@ -14,10 +25,16 @@ public class Package implements Serializable {
 	private int id;
 
 	private String name;
-
 	private int valPeriod;
-
 	private int monthlyFee;
+
+	@ManyToMany
+	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "idpackage"), inverseJoinColumns = @JoinColumn(name = "idservice"))
+	private List<Service> services = new ArrayList<Service>();
+
+	@ManyToMany
+	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "idpackage"), inverseJoinColumns = @JoinColumn(name = "idproduct"))
+	private List<Product> products = new ArrayList<Product>();
 
 	public int getId() {
 		return id;
@@ -51,4 +68,27 @@ public class Package implements Serializable {
 		this.monthlyFee = monthlyFee;
 	}
 
+	public List<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(List<Service> services) {
+		this.services = services;
+	}
+
+	public void addService(Service s) {
+		getServices().add(s);
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	public void addProduct(Product p) {
+		getProducts().add(p);
+	}
 }

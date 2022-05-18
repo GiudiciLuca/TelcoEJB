@@ -1,12 +1,42 @@
 package telco.entities;
 
-public class Product {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Product", schema = "telco")
+@NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
+public class Product implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+
 	private String name;
 	private int monthlyFee;
-	
-	public Product(String name, int monthlyFee) {
-		this.name = name;
-		this.monthlyFee = monthlyFee;
+
+	@ManyToMany
+	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "idproduct"), inverseJoinColumns = @JoinColumn(name = "idpackage"))
+	private List<Package> packages = new ArrayList<Package>();
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -23,6 +53,18 @@ public class Product {
 
 	public void setMonthlyFee(int monthlyFee) {
 		this.monthlyFee = monthlyFee;
+	}
+
+	public List<Package> getPackages() {
+		return packages;
+	}
+
+	public void setPackages(List<Package> packages) {
+		this.packages = packages;
+	}
+
+	public void addPackage(Package p) {
+		getPackages().add(p);
 	}
 
 }
