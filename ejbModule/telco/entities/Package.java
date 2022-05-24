@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,16 +26,21 @@ public class Package implements Serializable {
 	private int id;
 
 	private String name;
-	private int valPeriod;
-	private int monthlyFee;
 
 	@ManyToMany
-	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "idpackage"), inverseJoinColumns = @JoinColumn(name = "idservice"))
+	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "packageid"), inverseJoinColumns = @JoinColumn(name = "serviceid"))
 	private List<Service> services = new ArrayList<Service>();
 
 	@ManyToMany
-	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "idpackage"), inverseJoinColumns = @JoinColumn(name = "idproduct"))
+	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "packageid"), inverseJoinColumns = @JoinColumn(name = "productid"))
 	private List<Product> products = new ArrayList<Product>();
+
+	@ManyToMany
+	@JoinTable(name = "packagevalperiod", schema = "telco", joinColumns = @JoinColumn(name = "packageid"), inverseJoinColumns = @JoinColumn(name = "valperiodid"))
+	private List<ValPeriod> valPeriods = new ArrayList<ValPeriod>();
+	
+	@OneToMany(mappedBy = "pack")
+	private List<Order> orders;	
 
 	public int getId() {
 		return id;
@@ -50,22 +56,6 @@ public class Package implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getValPeriod() {
-		return valPeriod;
-	}
-
-	public void setValPeriod(int valPeriod) {
-		this.valPeriod = valPeriod;
-	}
-
-	public int getMonthlyFee() {
-		return monthlyFee;
-	}
-
-	public void setMonthlyFee(int monthlyFee) {
-		this.monthlyFee = monthlyFee;
 	}
 
 	public List<Service> getServices() {
@@ -91,4 +81,13 @@ public class Package implements Serializable {
 	public void addProduct(Product p) {
 		getProducts().add(p);
 	}
+
+	public List<ValPeriod> getValPeriods() {
+		return valPeriods;
+	}
+
+	public void setValPeriods(List<ValPeriod> valPeriods) {
+		this.valPeriods = valPeriods;
+	}
+
 }

@@ -10,7 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import telco.entities.Order;
-import telco.entities.OrderUserPackage;
+import telco.entities.Package;
+import telco.entities.Product;
+import telco.entities.User;
+import telco.entities.ValPeriod;
 
 @Stateless
 public class OrderService {
@@ -24,51 +27,62 @@ public class OrderService {
 		return em.find(Order.class, orderId);
 	}
 
-	// TODO: we can also pass directly the user and the package and than do the get
-	// on the userId and packageId
-	// check also if it makes sense :)
-	public void createOrder(int userId, int packageId, Timestamp dateTime, int totalValue, Date startDate,
-			boolean valid) {
+	public Order createOrder(User user, Package pack, ValPeriod valPeriod, int totalValue,
+			Date startDate, boolean valid, List<Product> products) {
 		Order o = new Order();
-		o.setDateTime(dateTime);
+		o.setDateTime(new Timestamp(System.currentTimeMillis()));
 		o.setTotalValue(totalValue);
 		o.setStartDate(startDate);
 		o.setValid(valid);
+		if (valid)
+			o.setFailedPayments(0);
+		else
+			o.setFailedPayments(1);
+		o.setUser(user);
+		o.setPackage(pack);
+		o.setValPeriod(valPeriod);
+		o.setProducts(products);
 		em.persist(o);
 		em.flush();
-
-		//This query is done to retrieve the id of the order that we have just create
-		Order o1 = em.createNamedQuery("Order.findId", Order.class).setParameter(1, dateTime)
-				.setParameter(2, totalValue).setParameter(3, startDate).setParameter(4, valid).getSingleResult();
-
-		OrderUserPackage oup = new OrderUserPackage();
-		oup.setIdOrder(o1.getId());
-		oup.setIdUser(userId);
-		em.persist(oup);
+		return o;
+	}
+	
+	public Order validOrder(Order order) {
+		Order o = findById(order.getId());
+		o.setValid(true);
+		o.setFailedPayments(0);
+		em.persist(o);
+		em.flush();
+		return o;
+	}
+	
+	public void invalidOrder(Order order) {
+		Order o = findById(order.getId());
+		o.setFailedPayments(o.getFailedPayments() + 1);
+		em.persist(o);
 		em.flush();
 	}
+	
 
 	public List<Order> findAllOrders() {
 		return em.createNamedQuery("Order.findAll", Order.class).getResultList();
 	}
 
-	public List<Order> findRejectedOrders() {
+	public List<Order> findAllRejectedOrders() {
 		return em.createNamedQuery("Order.findAllRejected", Order.class).getResultList();
 	}
 
-	// TODO: improve it (for example use "findRejectedOrders()")
+	//TODO improve and call a named query
 	public List<Order> findRejectedOrdersByUserId(int userId) {
-		List<OrderUserPackage> oupList = em.createNamedQuery("OrderUserPackage.findByUserId", OrderUserPackage.class)
-				.setParameter(1, userId).getResultList();
-		List<Order> rejectedOrders = new ArrayList<>();
-		for (OrderUserPackage oup : oupList) {
-			Order o = findById(oup.getIdOrder());
-			if (o != null) {
-				if (!o.isValid())
-					rejectedOrders.add(o);
+		List<Order> rejectedOrders = findAllRejectedOrders();
+		List<Order> userRejectedOrders = new ArrayList<Order>();
+		if(rejectedOrders != null) {
+			for(Order o : rejectedOrders) {
+				if(o.getUser().getId() == userId)
+					userRejectedOrders.add(o);
 			}
 		}
-
-		return rejectedOrders;
+		
+		return userRejectedOrders;
 	}
 }

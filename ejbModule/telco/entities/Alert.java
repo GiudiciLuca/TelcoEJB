@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,11 +23,12 @@ public class Alert implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	//TODO: online when there is a relationship it's done with the object and not the int id
 	@OneToOne
+	@JoinColumn(name = "userid")
 	private User user;
 
 	private Timestamp lastRejection;
+	private int amount;
 
 	public int getId() {
 		return id;
@@ -50,6 +52,14 @@ public class Alert implements Serializable {
 
 	public void setLastRejection(Timestamp lastRejection) {
 		this.lastRejection = lastRejection;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 }

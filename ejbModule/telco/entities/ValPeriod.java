@@ -12,29 +12,29 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Product", schema = "telco")
-@NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
-public class Product implements Serializable {
+@Table(name = "ValPeriod", schema = "telco")
+@NamedQuery(name = "ValPeriod.findAll", query = "SELECT v FROM ValPeriod v")
+public class ValPeriod implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String name;
-	private int monthlyFee;
+	private int months;
+	private int monthlyfee;
 
 	@ManyToMany
-	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
+	@JoinTable(name = "packagevalperiod", schema = "telco", joinColumns = @JoinColumn(name = "valperiodid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
 	private List<Package> packages = new ArrayList<Package>();
 	
-	@ManyToMany
-	@JoinTable(name = "orderproduct", schema = "telco", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "orderid"))
-	private List<Order> orders = new ArrayList<Order>();
-
+	@OneToMany(mappedBy = "valPeriod")
+	private List<Order> orders;
+	
 	public int getId() {
 		return id;
 	}
@@ -43,20 +43,20 @@ public class Product implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public int getMonths() {
+		return months;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setMonths(int months) {
+		this.months = months;
 	}
 
-	public int getMonthlyFee() {
-		return monthlyFee;
+	public int getMonthlyfee() {
+		return monthlyfee;
 	}
 
-	public void setMonthlyFee(int monthlyFee) {
-		this.monthlyFee = monthlyFee;
+	public void setMonthlyfee(int monthlyfee) {
+		this.monthlyfee = monthlyfee;
 	}
 
 	public List<Package> getPackages() {
@@ -65,10 +65,6 @@ public class Product implements Serializable {
 
 	public void setPackages(List<Package> packages) {
 		this.packages = packages;
-	}
-
-	public void addPackage(Package p) {
-		getPackages().add(p);
 	}
 
 }

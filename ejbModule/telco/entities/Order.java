@@ -3,11 +3,17 @@ package telco.entities;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,8 +23,6 @@ import javax.persistence.Table;
 @NamedQuery(name = "Order.findAll", query = "SELECT o FROM Order o")
 @NamedQuery(name = "Order.findAllRejected", query = "SELECT o FROM Order o WHERE o.valid = FALSE")
 @NamedQuery(name = "Order.findId", query = "SELECT o FROM Order o WHERE o.dateTime = ?1 AND o.totalValue = ?2 AND o.startDate = ?3 AND o.valid = ?4")
-//TODO: check the error in the query --> solved doing the relationship as class
-//@NamedQuery(name = "Order.findAllRejectedByUserId", query = "SELECT o FROM Order o JOIN o.userPackage WHERE o.valid = FALSE AND ")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -27,28 +31,29 @@ public class Order implements Serializable {
 	private int id;
 
 	private Timestamp dateTime;
-
 	private int totalValue;
-
 	private Date startDate;
-
 	private boolean valid;
+	private int failedPayments;
 
-	/*
-	// TODO: maybe do the same thing but on User (?)
-	// other solution can be: create a class with the relationship --> implemented
-	// other solution can be: have 2 OneToOne relationship with 1 User and 1 Package (?)
-	@OneToMany
-	@JoinTable(name = "orderuserpackage")
-	@MapKeyJoinColumn(name = "iduser")
-	private Map<User, Package> userPackage = new HashMap<>();
-	*/
+	@ManyToOne
+	@JoinColumn(name = "userid")
+	private User user;
+
+	@ManyToOne
+	@JoinColumn(name = "packageid")
+	private Package pack;
+
+	@ManyToOne
+	@JoinColumn(name = "valperiodid")
+	private ValPeriod valPeriod;
 	
-	//TODO: to check if needed bi-directional one-to-one association to Alert and SAS
-	@OneToOne
+	@ManyToMany
+	@JoinTable(name = "orderproduct", schema = "telco", joinColumns = @JoinColumn(name = "orderid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+	private List<Product> products = new ArrayList<Product>();
+	
+	@OneToOne(mappedBy = "order")
 	private SAS sas;
-	@OneToOne
-	private Alert alert;
 
 	public Order() {
 	}
@@ -93,14 +98,52 @@ public class Order implements Serializable {
 		this.valid = valid;
 	}
 
-	/*
-	public Map<User, Package> getUserPackage() {
-		return userPackage;
+	public int getFailedPayments() {
+		return failedPayments;
 	}
 
-	public void setUserPackage(Map<User, Package> userPackage) {
-		this.userPackage = userPackage;
+	public void setFailedPayments(int failedPayments) {
+		this.failedPayments = failedPayments;
 	}
-	*/
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Package getPackage() {
+		return pack;
+	}
+
+	public void setPackage(Package pack) {
+		this.pack = pack;
+	}
+
+	public ValPeriod getValPeriod() {
+		return valPeriod;
+	}
+
+	public void setValPeriod(ValPeriod valPeriod) {
+		this.valPeriod = valPeriod;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	public SAS getSas() {
+		return sas;
+	}
+
+	public void setSas(SAS sas) {
+		this.sas = sas;
+	}
 
 }

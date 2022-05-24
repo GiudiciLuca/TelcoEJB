@@ -33,7 +33,7 @@ public class Service implements Serializable {
 	private int gigafee;
 
 	@ManyToMany
-	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "idservice"), inverseJoinColumns = @JoinColumn(name = "idpackage"))
+	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "serviceid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
 	private List<Package> packages = new ArrayList<Package>();
 
 	public int getId() {

@@ -22,20 +22,46 @@ public class AlertService {
 		return em.find(Alert.class, alertId);
 	}
 	
-	public void createAlert(User user, Timestamp lastRejection) {
+	public void deleteAlert(User user) {
+		Alert a = findAlertByUser(user);
+		if(a != null) {
+			em.remove(a);
+			em.flush();
+		}
+	}
+	
+	public void handleAlert(User user, int totalAmount) {
+		Alert a = findAlertByUser(user);
+		Timestamp lastRejection = new Timestamp(System.currentTimeMillis());
+		if(a == null) {
+			a = createAlert(user, lastRejection, totalAmount);
+		} else {
+			a.setLastRejection(lastRejection);
+			a.setAmount(totalAmount);
+		}
+		em.persist(a);
+		em.flush();
+		
+	}
+	
+	public Alert createAlert(User user, Timestamp lastRejection, int totalAmount) {
 		Alert a = new Alert();
 		a.setUser(user);
 		a.setLastRejection(lastRejection);
-		em.persist(a);
-		em.flush();
+		a.setAmount(totalAmount);
+		return a;
 	}
 
 	public List<Alert> findAllAlerts() {
 		return em.createNamedQuery("Alert.findAll", Alert.class).getResultList();
 	}
 
-	// TODO: we can also pass directly the user and than do the get on the userId
-	public List<Alert> findAlertsByUser(int userId) {
-		return em.createNamedQuery("Alert.findByUser", Alert.class).setParameter(1, userId).getResultList();
+	//TODO to check
+	public Alert findAlertByUser(User user) {
+		try {
+			return em.createNamedQuery("Alert.findByUser", Alert.class).setParameter(1, user).getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

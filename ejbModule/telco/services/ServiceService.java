@@ -16,17 +16,12 @@ public class ServiceService {
 	public ServiceService() {
 
 	}
+	
+	public Service findById(int serviceId) {
+		return em.find(Service.class, serviceId);
+	}
 
 	public List<Service> findAllServices() {
 		return em.createNamedQuery("Service.findAll", Service.class).getResultList();
-	}
-
-	// TODO: to improve name
-	public Service findByType(String type) {
-		List<Service> results = findAllServices();
-		for (Service s : results)
-			if (s.getType().equals(type))
-				return s;
-		return null;
 	}
 }

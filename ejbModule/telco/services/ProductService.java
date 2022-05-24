@@ -33,13 +33,15 @@ public class ProductService {
 		return null;
 	}
 
-	public void createProduct(String name, int monthlyFee) {
+	public String createProduct(String name, int monthlyFee) {
 		if (findByName(name) == null) {
 			Product p = new Product();
 			p.setName(name);
 			p.setMonthlyFee(monthlyFee);
 			em.persist(p);
 			em.flush();
-		}
+			return "Product creation successful";
+		} else
+			return "Product with the same name already present";
 	}
 }

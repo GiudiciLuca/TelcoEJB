@@ -1,6 +1,8 @@
 package telco.entities;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,6 +26,15 @@ public class User implements Serializable {
 	private Boolean employee;
 
 	private Boolean insolvent;
+
+	@OneToMany(mappedBy = "user")
+	private List<SAS> sas;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Order> orders;
+	
+	@OneToOne(mappedBy = "user")
+	private Alert alert;
 
 	public User() {
 	}
@@ -74,6 +85,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<SAS> getSas() {
+		return sas;
+	}
+
+	public void setSas(List<SAS> sas) {
+		this.sas = sas;
 	}
 
 }

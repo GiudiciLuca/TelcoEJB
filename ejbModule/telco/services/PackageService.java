@@ -10,6 +10,7 @@ import java.util.List;
 import telco.entities.Package;
 import telco.entities.Product;
 import telco.entities.Service;
+import telco.entities.ValPeriod;
 
 @Stateless
 public class PackageService {
@@ -20,6 +21,9 @@ public class PackageService {
 	private ServiceService sService;
 	@EJB(name = "telco.services/ProductService")
 	private ProductService pService;
+	@EJB(name = "telco.services/ValPeriodService")
+	private ValPeriodService vService;
+	
 
 	public PackageService() {
 		// TODO Auto-generated constructor stub
@@ -39,14 +43,6 @@ public class PackageService {
 		return null;
 	}
 
-	public Package findDefault() {
-		Package found = null;
-		List<Package> results = em.createNamedQuery("Package.findAll", Package.class).getResultList();
-		if (results.size() > 0)
-			found = results.get(0);
-		return found;
-	}
-
 	public List<Package> findAllPackages() {
 		return em.createNamedQuery("Package.findAll", Package.class).getResultList();
 	}
@@ -54,34 +50,45 @@ public class PackageService {
 	public List<Product> findProducts(int id) {
 		return em.find(Package.class, id).getProducts();
 	}
+	
+	public List<ValPeriod> findValPeriods(int id) {
+		return em.find(Package.class, id).getValPeriods();
+	}
 
-	// TODO: to improve
-	public void createPackage(String name, int valPeriod, String[] services, String[] products) {
+	public String createPackage(String name, String[] valPeriods, String[] services, String[] products) {
 		if (findByName(name) == null) {
 			Package p = new Package();
 			p.setName(name);
-			p.setValPeriod(valPeriod);
-			if (valPeriod == 12)
-				p.setMonthlyFee(20);
-			else if (valPeriod == 24)
-				p.setMonthlyFee(18);
-			else
-				p.setMonthlyFee(15);
+			
 			List<Service> servicesToAdd = new ArrayList<Service>();
 			for (String s : services) {
-				Service serviceToAdd = sService.findByType(s);
+				Integer id = Integer.parseInt(s);
+				Service serviceToAdd = sService.findById(id);
 				servicesToAdd.add(serviceToAdd);
 			}
 			p.setServices(servicesToAdd);
+			
 			List<Product> productsToAdd = new ArrayList<Product>();
-			for (String prod : products) {
-				Product productToAdd = pService.findByName(prod);
+			for (String s : products) {
+				Integer prod = Integer.parseInt(s);
+				Product productToAdd = pService.findById(prod);
 				productsToAdd.add(productToAdd);
 			}
 			p.setProducts(productsToAdd);
+			
+			List<ValPeriod> valPeriodsToAdd = new ArrayList<ValPeriod>();
+			for (String s : valPeriods) {
+				Integer vp = Integer.parseInt(s);
+				ValPeriod valPeriodToAdd = vService.findById(vp);
+				valPeriodsToAdd.add(valPeriodToAdd);
+			}
+			p.setValPeriods(valPeriodsToAdd);
+			
 			em.persist(p);
 			em.flush();
-		}
+			return "Package creation successful";
+		} else
+			return "Package with the same name already present";
 	}
 
 }

@@ -5,6 +5,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.NonUniqueResultException;
+
+import telco.entities.Order;
 import telco.entities.User;
 import telco.exceptions.CredentialsException;
 import java.util.List;
@@ -38,17 +40,11 @@ public class UserService {
 			uList = em.createNamedQuery("User.checkRegistrationUsername", User.class).setParameter(1, usrn)
 					.getResultList();
 
-			// ------------ check
-			System.out.println("username " + uList);
-
 			if (!uList.isEmpty())
 				return "Username already used";
 
 			uList = em.createNamedQuery("User.checkRegistrationEmail", User.class).setParameter(1, email)
 					.getResultList();
-
-			// ------------ check
-			System.out.println("email " + uList);
 
 			if (!uList.isEmpty())
 				return "Email already used";
@@ -58,6 +54,7 @@ public class UserService {
 			user.setEmail(email);
 			user.setPassword(pwd);
 			user.setEmployee(false);
+			user.setInsolvent(false);
 			em.persist(user);
 			em.flush();
 
@@ -66,6 +63,23 @@ public class UserService {
 		} catch (PersistenceException e) {
 			throw new CredentialsException("Could not verify credentals");
 		}
+	}
 
+	public User findById(int userId) {
+		return em.find(User.class, userId);
+	}
+
+	public void handleInsolvent(User user, List<Order> rejectedOrders) {
+		User u = findById(user.getId());
+		if (u != null) {
+			if ((rejectedOrders == null | rejectedOrders.isEmpty()) & u.getInsolvent()) {
+				u.setInsolvent(false);
+			} else if (!rejectedOrders.isEmpty() & !u.getInsolvent()) {
+				u.setInsolvent(true);
+			} else
+				return;
+			em.persist(u);
+			em.flush();
+		}
 	}
 }
