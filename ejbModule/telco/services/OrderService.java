@@ -27,8 +27,8 @@ public class OrderService {
 		return em.find(Order.class, orderId);
 	}
 
-	public Order createOrder(User user, Package pack, ValPeriod valPeriod, int totalValue,
-			Date startDate, boolean valid, List<Product> products) {
+	public Order createOrder(User user, Package pack, ValPeriod valPeriod, int totalValue, Date startDate,
+			boolean valid, List<Product> products) {
 		Order o = new Order();
 		o.setDateTime(new Timestamp(System.currentTimeMillis()));
 		o.setTotalValue(totalValue);
@@ -46,7 +46,7 @@ public class OrderService {
 		em.flush();
 		return o;
 	}
-	
+
 	public Order validOrder(Order order) {
 		Order o = findById(order.getId());
 		o.setValid(true);
@@ -55,14 +55,15 @@ public class OrderService {
 		em.flush();
 		return o;
 	}
-	
+
 	public void invalidOrder(Order order) {
 		Order o = findById(order.getId());
-		o.setFailedPayments(o.getFailedPayments() + 1);
-		em.persist(o);
-		em.flush();
+		if (!o.isValid()) {
+			o.setFailedPayments(o.getFailedPayments() + 1);
+			em.persist(o);
+			em.flush();
+		}
 	}
-	
 
 	public List<Order> findAllOrders() {
 		return em.createNamedQuery("Order.findAll", Order.class).getResultList();
@@ -72,17 +73,17 @@ public class OrderService {
 		return em.createNamedQuery("Order.findAllRejected", Order.class).getResultList();
 	}
 
-	//TODO improve and call a named query
+	// TODO improve and call a named query
 	public List<Order> findRejectedOrdersByUserId(int userId) {
 		List<Order> rejectedOrders = findAllRejectedOrders();
 		List<Order> userRejectedOrders = new ArrayList<Order>();
-		if(rejectedOrders != null) {
-			for(Order o : rejectedOrders) {
-				if(o.getUser().getId() == userId)
+		if (rejectedOrders != null) {
+			for (Order o : rejectedOrders) {
+				if (o.getUser().getId() == userId)
 					userRejectedOrders.add(o);
 			}
 		}
-		
+
 		return userRejectedOrders;
 	}
 }
