@@ -57,6 +57,10 @@ public class PackageService {
 
 	public String createPackage(String name, String[] valPeriods, String[] services, String[] products) {
 		if (findByName(name) == null) {
+			
+			if(services.length == 0 | valPeriods.length == 0)
+				return "Please select at least one validity periods and one service";
+			
 			Package p = new Package();
 			p.setName(name);
 			
@@ -68,13 +72,15 @@ public class PackageService {
 			}
 			p.setServices(servicesToAdd);
 			
-			List<Product> productsToAdd = new ArrayList<Product>();
-			for (String s : products) {
-				Integer prod = Integer.parseInt(s);
-				Product productToAdd = pService.findById(prod);
-				productsToAdd.add(productToAdd);
+			if (products != null) {
+				List<Product> productsToAdd = new ArrayList<Product>();
+				for (String s : products) {
+					Integer prod = Integer.parseInt(s);
+					Product productToAdd = pService.findById(prod);
+					productsToAdd.add(productToAdd);
+				}
+				p.setProducts(productsToAdd);
 			}
-			p.setProducts(productsToAdd);
 			
 			List<ValPeriod> valPeriodsToAdd = new ArrayList<ValPeriod>();
 			for (String s : valPeriods) {

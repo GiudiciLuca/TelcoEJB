@@ -82,4 +82,8 @@ public class UserService {
 			em.flush();
 		}
 	}
+	
+	public List<User> findInsolvents() {
+		return em.createNamedQuery("User.findInsolvents", User.class).getResultList();
+	}
 }

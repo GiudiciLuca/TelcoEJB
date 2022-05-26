@@ -18,7 +18,7 @@ public class AverageProductsPerPackage implements Serializable {
 	private int packageId;
 	private int totProducts;
 	private int totOrders;
-	private int avgProducts;
+	private float avgProducts;
 
 	public AverageProductsPerPackage() {
 	}
@@ -47,11 +47,11 @@ public class AverageProductsPerPackage implements Serializable {
 		this.totOrders = totOrders;
 	}
 
-	public int getAvgProducts() {
+	public float getAvgProducts() {
 		return avgProducts;
 	}
 
-	public void setAvgProducts(int avgProducts) {
+	public void setAvgProducts(float avgProducts) {
 		this.avgProducts = avgProducts;
 	}
 }

@@ -30,13 +30,14 @@ public class AlertService {
 		}
 	}
 	
-	public void handleAlert(User user, int totalAmount) {
+	public void handleAlert(User user, int totalAmount, String typeOfPayment) {
 		Alert a = findAlertByUser(user);
 		Timestamp lastRejection = new Timestamp(System.currentTimeMillis());
 		if(a == null) {
 			a = createAlert(user, lastRejection, totalAmount);
 		} else {
-			a.setLastRejection(lastRejection);
+			if (typeOfPayment.equals("Failed payment"))
+				a.setLastRejection(lastRejection);
 			a.setAmount(totalAmount);
 		}
 		em.persist(a);

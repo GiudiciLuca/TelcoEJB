@@ -6,6 +6,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import telco.entities.Alert;
+import telco.entities.Order;
+import telco.entities.User;
+
 @Stateless
 public class ViewService {
 
@@ -40,4 +44,10 @@ public class ViewService {
 		return em.createNativeQuery(sql, AverageProductsPerPackage.class).getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<BestSellerOptProduct> totalBestSellerOptProduct() {
+
+		String sql = "SELECT * FROM best_seller_opt_product bsop ORDER BY bsop.totAmount DESC";
+		return em.createNativeQuery(sql, BestSellerOptProduct.class).getResultList();
+	}
 }
