@@ -18,15 +18,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Package", schema = "telco")
 @NamedQuery(name = "Package.findAll", query = "SELECT p FROM Package p")
+@NamedQuery(name = "Package.findByName", query = "SELECT p FROM Package p WHERE p.name = ?1")
 public class Package implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	//Attribute
 	private String name;
-
+	//Relationships
 	@ManyToMany
 	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "packageid"), inverseJoinColumns = @JoinColumn(name = "serviceid"))
 	private List<Service> services = new ArrayList<Service>();

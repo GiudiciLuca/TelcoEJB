@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -24,17 +22,16 @@ public class ValPeriod implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
 	private int months;
 	private int monthlyfee;
-
-	@ManyToMany
-	@JoinTable(name = "packagevalperiod", schema = "telco", joinColumns = @JoinColumn(name = "valperiodid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
+	// Relationships
+	@ManyToMany(mappedBy = "valPeriods")
 	private List<Package> packages = new ArrayList<Package>();
-	
+
 	@OneToMany(mappedBy = "valPeriod")
 	private List<Order> orders;
-	
+
 	public int getId() {
 		return id;
 	}

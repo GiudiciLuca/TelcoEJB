@@ -32,7 +32,7 @@ public class PackVp implements Serializable {
 	public int hashCode() {
 		return Objects.hash(packageId, valPeriodId);
 	}
-
+	//Auto-generated method
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

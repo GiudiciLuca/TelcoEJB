@@ -16,7 +16,9 @@ public class PurchasesPerPackageAndVp implements Serializable {
 	@EmbeddedId
 	@AttributeOverride(name = "packageId", column = @Column(name = "packageId"))
 	private PackVp id;
-
+	
+	private String packageName;
+	private int valPeriodMonths;
 	private int totPurchases;
 
 	public PackVp getId() {
@@ -33,6 +35,22 @@ public class PurchasesPerPackageAndVp implements Serializable {
 
 	public void setTotPurchases(int totPurchases) {
 		this.totPurchases = totPurchases;
+	}
+
+	public int getValPeriodMonths() {
+		return valPeriodMonths;
+	}
+
+	public void setValPeriodMonths(int valPeriodMonths) {
+		this.valPeriodMonths = valPeriodMonths;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
 }

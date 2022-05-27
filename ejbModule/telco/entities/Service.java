@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -23,7 +21,7 @@ public class Service implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
 	private String type;
 	private int min;
 	private int sms;
@@ -31,9 +29,8 @@ public class Service implements Serializable {
 	private int minfee;
 	private int smsfee;
 	private int gigafee;
-
-	@ManyToMany
-	@JoinTable(name = "packageservice", schema = "telco", joinColumns = @JoinColumn(name = "serviceid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
+	// Relationship
+	@ManyToMany(mappedBy = "services")
 	private List<Package> packages = new ArrayList<Package>();
 
 	public int getId() {

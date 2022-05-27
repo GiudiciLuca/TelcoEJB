@@ -7,6 +7,8 @@ import javax.persistence.PersistenceContext;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import telco.entities.Alert;
 import telco.entities.Package;
 import telco.entities.Product;
 import telco.entities.Service;
@@ -26,21 +28,19 @@ public class PackageService {
 	
 
 	public PackageService() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Package findById(int packageId) {
 		return em.find(Package.class, packageId);
 	}
 
+	// If it returns null, there is no package already created with that name.
 	public Package findByName(String name) {
-		List<Package> results = em.createNamedQuery("Package.findAll", Package.class).getResultList();
-		for (Package p : results) {
-			if (p.getName().equals(name)) {
-				return p;
-			}
+		try {
+			return em.createNamedQuery("Package.findByName", Package.class).setParameter(1, name).getSingleResult();
+		} catch (Exception e) {
+			return null;
 		}
-		return null;
 	}
 
 	public List<Package> findAllPackages() {

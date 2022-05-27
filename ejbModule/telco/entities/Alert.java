@@ -22,13 +22,13 @@ public class Alert implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
+	private Timestamp lastRejection;
+	private int amount;
+	// Relationship
 	@OneToOne
 	@JoinColumn(name = "userid")
 	private User user;
-
-	private Timestamp lastRejection;
-	private int amount;
 
 	public int getId() {
 		return id;
@@ -61,5 +61,4 @@ public class Alert implements Serializable {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-
 }

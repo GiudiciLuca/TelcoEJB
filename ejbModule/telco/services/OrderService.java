@@ -2,7 +2,6 @@ package telco.services;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -73,17 +72,7 @@ public class OrderService {
 		return em.createNamedQuery("Order.findAllRejected", Order.class).getResultList();
 	}
 
-	// TODO improve and call a named query
-	public List<Order> findRejectedOrdersByUserId(int userId) {
-		List<Order> rejectedOrders = findAllRejectedOrders();
-		List<Order> userRejectedOrders = new ArrayList<Order>();
-		if (rejectedOrders != null) {
-			for (Order o : rejectedOrders) {
-				if (o.getUser().getId() == userId)
-					userRejectedOrders.add(o);
-			}
-		}
-
-		return userRejectedOrders;
+	public List<Order> findRejectedOrdersByUser(User user) {
+		return em.createNamedQuery("Order.findAllRejectedByUser", Order.class).setParameter(1, user).getResultList();
 	}
 }

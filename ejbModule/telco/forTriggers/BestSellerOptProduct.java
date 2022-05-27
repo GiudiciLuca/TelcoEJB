@@ -18,12 +18,13 @@ public class BestSellerOptProduct implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productId;
 	
+	private String productName;
 	private int totAmount;
 
 	public BestSellerOptProduct() {
-		
+
 	}
-	
+
 	public int getProductId() {
 		return productId;
 	}
@@ -39,6 +40,13 @@ public class BestSellerOptProduct implements Serializable {
 	public void setTotAmount(int totAmount) {
 		this.totAmount = totAmount;
 	}
-	
-	
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
 }

@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -23,16 +21,14 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
 	private String name;
 	private int monthlyFee;
-
-	@ManyToMany
-	@JoinTable(name = "packageproduct", schema = "telco", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "packageid"))
+	// Relationships
+	@ManyToMany(mappedBy = "products")
 	private List<Package> packages = new ArrayList<Package>();
-	
-	@ManyToMany
-	@JoinTable(name = "orderproduct", schema = "telco", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "orderid"))
+
+	@ManyToMany(mappedBy = "products")
 	private List<Order> orders = new ArrayList<Order>();
 
 	public int getId() {

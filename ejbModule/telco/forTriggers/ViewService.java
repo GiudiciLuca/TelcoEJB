@@ -6,10 +6,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import telco.entities.Alert;
-import telco.entities.Order;
-import telco.entities.User;
-
 @Stateless
 public class ViewService {
 

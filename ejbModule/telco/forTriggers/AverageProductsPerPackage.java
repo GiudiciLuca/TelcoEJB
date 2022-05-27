@@ -16,6 +16,8 @@ public class AverageProductsPerPackage implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int packageId;
+	
+	private String packageName;
 	private int totProducts;
 	private int totOrders;
 	private float avgProducts;
@@ -53,5 +55,13 @@ public class AverageProductsPerPackage implements Serializable {
 
 	public void setAvgProducts(float avgProducts) {
 		this.avgProducts = avgProducts;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 }

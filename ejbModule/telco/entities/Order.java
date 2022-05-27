@@ -22,20 +22,20 @@ import javax.persistence.Table;
 @Table(name = "order", schema = "telco")
 @NamedQuery(name = "Order.findAll", query = "SELECT o FROM Order o")
 @NamedQuery(name = "Order.findAllRejected", query = "SELECT o FROM Order o WHERE o.valid = FALSE")
-@NamedQuery(name = "Order.findId", query = "SELECT o FROM Order o WHERE o.dateTime = ?1 AND o.totalValue = ?2 AND o.startDate = ?3 AND o.valid = ?4")
+@NamedQuery(name = "Order.findAllRejectedByUser", query = "SELECT o FROM Order o WHERE o.valid = FALSE AND o.user = ?1")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
 	private Timestamp dateTime;
 	private int totalValue;
 	private Date startDate;
 	private boolean valid;
 	private int failedPayments;
-
+	// Relationships
 	@ManyToOne
 	@JoinColumn(name = "userid")
 	private User user;
@@ -47,11 +47,11 @@ public class Order implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "valperiodid")
 	private ValPeriod valPeriod;
-	
+
 	@ManyToMany
 	@JoinTable(name = "orderproduct", schema = "telco", joinColumns = @JoinColumn(name = "orderid"), inverseJoinColumns = @JoinColumn(name = "productid"))
 	private List<Product> products = new ArrayList<Product>();
-	
+
 	@OneToOne(mappedBy = "order")
 	private SAS sas;
 

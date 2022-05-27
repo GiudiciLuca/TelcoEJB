@@ -16,9 +16,10 @@ public class PurchasesPerPackage implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int packageId;
-	//private String packageName;
-	private int totPurchases;
 
+	private String packageName;
+	private int totPurchases;
+	
 	public PurchasesPerPackage() {
 		
 	}
@@ -31,7 +32,7 @@ public class PurchasesPerPackage implements Serializable {
 		this.packageId = packageId;
 	}
 
-	/*
+	
 	public String getPackageName() {
 		return packageName;
 	}
@@ -39,7 +40,7 @@ public class PurchasesPerPackage implements Serializable {
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
-	*/
+	
 
 	public int getTotPurchases() {
 		return totPurchases;

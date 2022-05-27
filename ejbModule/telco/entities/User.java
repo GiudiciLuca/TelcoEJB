@@ -17,23 +17,19 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attributes
 	private String username;
-
 	private String password;
-
 	private String email;
-
 	private Boolean employee;
-
 	private Boolean insolvent;
-
+	// Relationships
 	@OneToMany(mappedBy = "user")
 	private List<SAS> sas;
-	
+
 	@OneToMany(mappedBy = "user")
 	private List<Order> orders;
-	
+
 	@OneToOne(mappedBy = "user")
 	private Alert alert;
 

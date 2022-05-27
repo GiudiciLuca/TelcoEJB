@@ -18,6 +18,7 @@ private static final long serialVersionUID = 1L;
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int packageId;
 	
+	private String packageName;
 	private int totSaleWithProducts;
 	private int totSaleWithoutProducts;
 	
@@ -47,6 +48,14 @@ private static final long serialVersionUID = 1L;
 
 	public void setTotSaleWithoutProducts(int totSaleWithoutProducts) {
 		this.totSaleWithoutProducts = totSaleWithoutProducts;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 	
 }

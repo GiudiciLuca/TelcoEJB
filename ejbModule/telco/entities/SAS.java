@@ -22,16 +22,16 @@ public class SAS implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	// Attribute
+	private Date deactivationDate;
+	// Relationships
 	@OneToOne
 	@JoinColumn(name = "orderid")
 	private Order order;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "userid")
 	private User user;
-
-	private Date deactivationDate;
 
 	public int getId() {
 		return id;
